@@ -1,65 +1,224 @@
-import Image from "next/image";
+"use client";
+
+import Navbar from "./components/Navbar";
+import { Mic, Brain, BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
+import LoginModal from "./components/LoginModal";
+import SignupModal from "./components/SignupModal";
 
 export default function Home() {
+
+  /* ---------------- STATE ---------------- */
+
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  /* ---------------- FETCH FEEDBACK ---------------- */
+
+  useEffect(() => {
+
+    const fetchFeedbacks = async () => {
+      try {
+
+        const res = await fetch("/api/feedback");
+        const data = await res.json();
+
+        const randomFeedbacks = data
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3);
+
+        setFeedbacks(randomFeedbacks);
+
+      } catch (error) {
+        console.log("Error fetching feedback:", error);
+      }
+    };
+
+    fetchFeedbacks();
+
+  }, []);
+
+  /* ---------------- UI ---------------- */
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+
+      {/* NAVBAR */}
+      <Navbar />
+
+      {/* HERO SECTION */}
+      <section className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center pt-32 px-6">
+
+        {/* LEFT CONTENT */}
+        <div className="text-center md:text-left">
+
+          <h1 className="text-5xl font-bold leading-tight">
+            Master Your Interviews with
+            <span className="text-indigo-600"> MockLab AI</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="mt-6 text-gray-600 text-lg max-w-xl">
+            Simulate real technical interviews, receive intelligent feedback,
+            and track your improvement with MockLab AI.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+          <button
+            onClick={() => setShowLogin(true)}
+            className="mt-8 bg-indigo-600 text-white px-6 py-3 rounded-xl hover:scale-105 transition duration-300 shadow-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            Start Practicing
+          </button>
+
+        </div>
+
+        {/* RIGHT IMAGE */}
+        <div className="flex justify-center">
+
+          <div className="relative">
+
+            {/* Glow Effect */}
+            <div className="absolute inset-0 bg-indigo-400 blur-3xl opacity-20 rounded-full"></div>
+
+            <img
+              src="/interview.png"
+              alt="Interview Illustration"
+              className="relative w-[450px] md:w-[550px] rounded-2xl shadow-xl hover:scale-105 transition duration-500"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+          </div>
+
         </div>
-      </main>
+
+      </section>
+
+      {/* FEATURES SECTION */}
+      <section className="max-w-6xl mx-auto mt-28 px-6">
+
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Powerful Features to Boost Your Interview Skills
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+
+          {/* FEATURE 1 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+            <Mic className="text-indigo-600 mb-4" size={40} />
+            <h3 className="text-xl font-semibold mb-3">
+              Voice-Based Interview Practice
+            </h3>
+            <p className="text-gray-600">
+              Answer interview questions naturally using your voice,
+              just like a real interview experience.
+            </p>
+          </div>
+
+          {/* FEATURE 2 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+            <Brain className="text-indigo-600 mb-4" size={40} />
+            <h3 className="text-xl font-semibold mb-3">
+              AI Powered Feedback
+            </h3>
+            <p className="text-gray-600">
+              Get intelligent insights on clarity, accuracy, and communication
+              to improve faster.
+            </p>
+          </div>
+
+          {/* FEATURE 3 */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300">
+            <BarChart3 className="text-indigo-600 mb-4" size={40} />
+            <h3 className="text-xl font-semibold mb-3">
+              Performance Tracking
+            </h3>
+            <p className="text-gray-600">
+              Monitor your progress with detailed analytics and improvement
+              insights.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* FEEDBACK SECTION */}
+      <section className="max-w-6xl mx-auto mt-28 px-6 pb-20">
+
+        <h2 className="text-3xl font-bold text-center mb-12">
+          What Users Say About MockLab AI
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
+
+          {feedbacks.length > 0 ? (
+            feedbacks.map((item) => (
+              <div
+                key={item._id}
+                className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition"
+              >
+                <p className="text-gray-600 italic">
+                  "{item.feedback}"
+                </p>
+
+                <h4 className="mt-4 font-semibold text-indigo-600">
+                  {item.name}
+                </h4>
+
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              Loading feedback...
+            </p>
+          )}
+
+        </div>
+
+        {/* SUPPORT */}
+        <div className="text-center mt-16">
+
+          <h3 className="text-2xl font-semibold">
+            Need Help or Want to Share Feedback?
+          </h3>
+
+          <p className="text-gray-600 mt-3">
+            Your feedback helps us improve MockLab AI.
+          </p>
+
+          <a
+            href="mailto:support@mocklab.ai"
+            className="inline-block mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:scale-105 transition"
+          >
+            Contact Support
+          </a>
+
+        </div>
+
+      </section>
+
+      {/* LOGIN MODAL */}
+      {showLogin && (
+        <LoginModal
+          close={() => setShowLogin(false)}
+          openSignup={() => {
+            setShowLogin(false);
+            setShowSignup(true);
+          }}
+        />
+      )}
+
+      {/* SIGNUP MODAL */}
+      {showSignup && (
+        <SignupModal
+          close={() => setShowSignup(false)}
+          openLogin={() => {
+            setShowSignup(false);
+            setShowLogin(true);
+          }}
+        />
+      )}
+
     </div>
   );
 }
